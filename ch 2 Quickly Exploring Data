@@ -1,0 +1,148 @@
+# 2.1.creating a scatter(산점도)
+```{r}
+#기본함수들 보다 ggplot2를 사용하는게 통일된 인터페이스 사용에 좋다
+#qplot()기본함수와 비슷한 문법 이보다 세련된 ggplot()의 그래프 사용
+#install.packages("ggplot2")
+
+
+plot(mtcars$wt,mtcars$mpg)
+# mtcars = 1974년 미국의 Motor Trend 자료
+# mpg = miles per gallon 마일당 연비
+# wt  = weight 무게
+```
+
+```{r}
+
+library(ggplot2)
+qplot(mtcars$wt,mtcars$mpg)
+
+qplot(wt, mpg, data=mtcars)
+
+ggplot(mtcars, aes(x=wt, y=mpg)) + geom_point()
+```
+
+
+# 2.2.Creating a Line Graph(라인그래프)
+```{r}
+#라인 
+#32 - 212화씨온도(°F) = 0 - 100 섭씨온도(°C) 
+plot(pressure$temperature, pressure$pressure, type="l")
+
+
+plot(pressure$temperature, pressure$pressure, type="b")
+plot(pressure$temperature, pressure$pressure, type="c")
+
+#히스토그램
+plot(pressure$temperature, pressure$pressure, type="h")
+plot(pressure$temperature, pressure$pressure, type="n")
+plot(pressure$temperature, pressure$pressure, type="o")
+
+#포인트
+plot(pressure$temperature, pressure$pressure, type="p")
+
+#s
+plot(pressure$temperature, pressure$pressure, type="s")
+
+plot(pressure$temperature, pressure$pressure, type="l")
+points(pressure$temperature, pressure$pressure)
+lines(pressure$temperature, pressure$pressure/2, col="red")
+lines(pressure$temperature, pressure$pressure/3, col="blue")
+points(pressure$temperature, pressure$pressure/2, col="red")
+
+qplot(pressure$temperature, pressure$pressure, geom="line")
+#위랑같다
+qplot(temperature, pressure, data=pressure, geom="line")
+
+ggplot(pressure, aes(x=temperature, y=pressure))+ geom_line()
+
+
+#라인과 포인트 함께
+qplot(temperature, pressure, data=pressure, geom=c("line","point")) 
+
+ggplot(pressure, aes(x=temperature, y=pressure))+ geom_line()+geom_point() 
+
+```
+
+
+#2.3.Creating a Bar Graph(막대그래프)
+
+```{r}
+#BOD [biochemical oxygen demand] 생화학적산소요구량
+
+barplot(BOD$demand, names.arg=BOD$Time)
+
+table(mtcars$cyl)
+barplot(table(mtcars$cyl))
+
+
+qplot(BOD$Time, BOD$demand, geom="bar", stat="identity")
+qplot(factor(BOD$Time), BOD$demand, geom="bar", stat="identity")
+
+qplot(mtcars$cyl)
+qplot(factor(mtcars$cyl))
+
+qplot(Time, demand, data=BOD, geom="bar", stat="identity")
+ggplot(BOD, aes(x=Time, y=demand)) + geom_bar(stat="identity")
+
+qplot(factor(cyl),data=mtcars)
+ggplot(mtcars, aes(x=factor(cyl))) + geom_bar()
+
+```
+
+#2.4.Creating a Histogram(히스토그램)
+
+```{r}
+hist(mtcars$mpg)
+hist(mtcars$mpg,breaks=10)
+
+qplot(mtcars$mpg)
+
+qplot(mpg, data=mtcars, binwidth=4)
+```
+
+#2.5.Creating a box plot(박스플롯)
+```{r}
+plot(ToothGrowth$supp, ToothGrowth$len)
+
+ boxplot(len ~ supp, data= ToothGrowth)
+
+qplot(ToothGrowth$supp, ToothGrowth$len, geom="boxplot")
+
+
+ggplot(ToothGrowth, aes(x=supp, y=len))+ geom_boxplot()
+ggplot(ToothGrowth, aes(x=supp, y=len))+ geom_line()
+ggplot(ToothGrowth, aes(x=supp, y=len))+ geom_point()
+
+
+qplot(supp,len, data=ToothGrowth, geom="boxplot")
+ggplot(ToothGrowth, aes(x=supp, y=len))+ geom_point()
+ggplot(ToothGrowth, aes(x=supp, y=len))+ geom_point()+ geom_boxplot()
+ggplot(ToothGrowth, aes(x=supp, y=len))+ geom_boxplot()+ geom_point()
+
+
+qplot(interaction(ToothGrowth$supp, ToothGrowth$dose), ToothGrowth$len, geom="boxplot")
+```
+
+#2.6.Plotting a function Curve(함수곡선)
+
+```{r}
+curve(x^3-5*x,from=-4, to=4)
+
+myfun<- function(xvar){ 1/(1+exp(-xvar+10))}
+curve(myfun(x), from=0,to=20)
+
+
+#curve(1-myfun(x), add = TURE, col = "red")
+#Error in curve(1 - myfun(x), add = TURE, col = "red") : 
+#  object 'TURE' not found
+
+curve(1-myfun(x),  col = "red")
+
+qplot(c(0,20), fun=myfun, stat="function",geom="line")
+qplot(c(0,20), fun=myfun, stat="function",geom="point")
+
+ggplot(data.frame(x=c(0,20)),aes(x=x))+ stat_function(fun=myfun, geom="line")
+
+
+
+```
